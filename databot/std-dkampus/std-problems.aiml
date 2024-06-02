@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<aiml version="1.0.1" encoding="UTF-8">
+<category>
+    <pattern>MAKANAN BELUM SAMPAI</pattern>
+    <template>
+        Mohon maaf atas keterlambatannya.|Apakah Anda ingin:|1. Melacak pesanan?|2. Meminta pengembalian dana?|3. Menghubungi layanan pelanggan?
+    </template>
+</category>
+<category>
+    <pattern>MAKANAN ADA YANG KURANG</pattern>
+        <template>Maaf, makanan ada yang kurang? Silahkan berikan order ID Anda.</template>
+</category>
+<category>
+    <pattern>MAKANAN ADA YANG SALAH</pattern>
+        <template>Maaf, makanan ada yang salah? Silahkan berikan order ID Anda.</template>
+</category>
+<category>
+    <pattern>PESANAN LAMA DI SIAPKAN</pattern>
+        <template>Maaf, pesanan lama disiapkan. Mohon tunggu sebentar, biasanya pesanan dan pengiriman akan selesai dalam waktu 30-45 menit.</template>
+</category>
+<category>
+    <pattern>PESANAN BELUM DI AMBIL DRIVER</pattern>
+        <template>Maaf, saat ini pesanan belum diambil oleh driver. Mohon tunggu sebentar.</template>
+</category>
+<category>
+    <pattern>PESANAN BELUM DI AMBIL COURIER</pattern>
+        <template>Maaf, pesanan belum diambil oleh courier. Mohon tunggu sebentar.</template>
+</category>
+<category>
+    <pattern>PESANAN BELUM DI ANTAR</pattern>
+        <template>Maaf, pesanan belum diantar karena sedang dalam proses.</template>
+</category>
+<category>
+    <pattern>WARUNG TUTUP</pattern>
+        <template>Maaf, warung tutup. Silahkan pesan di jam operasional setiap warung.</template>
+</category>
+<category>
+    <pattern>UMKM TUTUP</pattern>
+        <template>Maaf, UMKM tutup. Silahkan pesan di jam operasional setiap UMKM.</template>
+</category>
+<category>
+    <pattern>PESANAN YANG DIPESAN HABIS HABIS</pattern>
+        <template>Maaf, karena pesanan yang Anda pesan habis.|Apakah Anda ingin mengembalikan dana?</template>
+</category>
+<category>
+    <pattern>PESANAN DIBATALKAN</pattern>
+        <template>Maaf, untuk pesanan yang sudah dibatalkan.|Apakah Anda ingin melakukan pengembalian dana?</template>
+</category>
+<category>
+    <pattern>PEMBAYARAN GAGAL</pattern>
+        <template>Maaf, pembayaran gagal. Silahkan coba kembali dalam 1-15 menit.</template>
+</category>
+<category>
+    <pattern>PENGEMBALIAN DANA</pattern>
+        <template>Maaf untuk ketidaknyamanan yang Anda alami.|Apakah Anda ingin melakukan pengembalian dana?</template>
+</category>
+</aiml>

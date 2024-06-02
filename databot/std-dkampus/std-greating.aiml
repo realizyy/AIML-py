@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<aiml version="1.0.1" encoding="UTF-8">
+    <category>
+        <pattern>HALO</pattern>
+        <template>
+            <think>
+                <set name="greeting">Hai!</set>
+            </think>
+            <srai>APA KABAR KAMU</srai>
+        </template>
+    </category>
+    <category>
+        <pattern>APA KABAR KAMU</pattern>
+        <template><get name="greeting"/>! Ada yang bisa saya bantu?</template>
+    </category>
+    <category>
+        <pattern>SIAPA NAMA KAMU</pattern>
+        <template>Nama saya <get name="nameBOT"/>ALICE.</template>
+    </category>
+    <category>
+        <pattern>JAM OPERASIONAL DKAMPUS</pattern>
+        <template>Jam operasional Dkampus adalah pukul 08:00 - 20:00.</template>
+    </category>
+    <category>
+        <pattern>KONTAK DKAMPUS</pattern>
+        <template>Kontak kampus Whatsapp: wa.me/6281929381 Instagram: @dkampus.id X: x.com/dkampus</template>
+    </category>
+    <category>
+        <pattern>WEBSITE DKAMPUS</pattern>
+        <template>Website kampus bisa diakses di dkampus.my.id yaa!</template>
+    </category>
+    <category>
+        <pattern>BOT</pattern>
+        <template>Iya saya adalah bot ALICE dari DKAMPUS. Apa yang bisa saya bantu?|Atau kamu mau berbicara dengan admin kami?</template>
+    </category>
+    <category>
+        <pattern>EXIT</pattern>
+        <template>Sampai jumpa! Jangan ragu untuk bertanya lagi ya!</template>
+    </category>
+</aiml>
