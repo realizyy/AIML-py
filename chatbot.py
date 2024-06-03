@@ -14,10 +14,12 @@ kernel.respond("load aiml b")
 kernel.setBotPredicate("name", "ALICE")
 kernel.setBotPredicate("master", "R.a")
 
-
 # Initialize the context and users
 context = {}
 users = {}
+
+# Function to handle the chatbot response
+kernel.setPredicate("check_order_status", order_services.track_order)
 
 def chatbot_response(input, uid):
     if uid not in users: #if the user is not in the users list, then create a new user
@@ -34,6 +36,17 @@ def chatbot_response(input, uid):
         kernel.setPredicate("email_user", users[uid].email)
         kernel.setPredicate("phone_user", users[uid].phone)
         # as soon will be add more...
+
+    if input.upper().startswith("CEK STATUS ORDER"):
+        # get the next input from the user
+        next_input = input[16:].strip()
+        # call the check_order_status function with the next input
+        response = order_services.track_order(next_input)
+        print(response)
+        return response
+    else:
+        response = kernel.respond(input)
+        return response
 
     if uid not in context: #if the user is not in the context list, then create a new context
         context[uid] = Context(uid)

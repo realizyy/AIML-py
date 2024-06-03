@@ -3,7 +3,11 @@
 <aiml version="1.0.1" encoding="UTF-8">
 <category>
     <pattern>MAKANAN BELUM SAMPAI</pattern>
-    <template>Mohon maaf atas keterlambatannya.</template>
+        <template>Maaf, makanan belum sampai? Silahkan berikan order ID Anda dengan format 'CEK STATUS ORDER (Order ID Kamu)'.</template>
+</category>
+<category>
+    <pattern>CEK STATUS ORDER</pattern>
+    <template>Silahkan masukan order ID Anda.</template>
 </category>
 <category>
     <pattern>MAKANAN ADA YANG KURANG</pattern>
