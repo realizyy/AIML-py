@@ -18,7 +18,7 @@ kernel.setBotPredicate("master", "R.a")
 context = {}
 users = {}
 
-# Function to handle the chatbot response
+# Function to handle the chatbot response with further logic
 kernel.setPredicate("check_order_status", order_services.track_order)
 
 def chatbot_response(input, uid):
@@ -37,19 +37,35 @@ def chatbot_response(input, uid):
         kernel.setPredicate("phone_user", users[uid].phone)
         # as soon will be add more...
 
+    if uid not in context: #if the user is not in the context list, then create a new context
+        context[uid] = Context(uid)
+
+    # check if the input is to check the order status (problems with the orders)
     if input.upper().startswith("CEK STATUS ORDER"):
         # get the next input from the user
         next_input = input[16:].strip()
         # call the check_order_status function with the next input
         response = order_services.track_order(next_input)
-        print(response)
+        #print(response)
+        return response
+    elif input.upper().startswith("ITEM YANG KURANG"):
+        # get the next input from the user
+        next_input = input[16:].strip()
+        # call the missing_food function with the next input
+        response = order_services.missing_food(next_input)
+        #print(response)
+        return response
+    elif input.upper().startswith("PESANAN SALAH"):
+        # get the next input from the user
+        next_input = input[16:].strip()
+        # call the handle_wrong_food function with the next input
+        response = order_services.handle_wrong_food(next_input)
+        #print(response)
         return response
     else:
+        # if the input is not to check the order status, then respond with the chatbot
         response = kernel.respond(input)
         return response
-
-    if uid not in context: #if the user is not in the context list, then create a new context
-        context[uid] = Context(uid)
 
     response = kernel.respond(input)
     return response
