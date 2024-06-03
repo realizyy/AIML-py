@@ -2,6 +2,7 @@ import aiml
 from services import order_services, payment_services, chat_services
 from models.user import User
 from models.context import Context
+from controller import user_controller
 
 kernel = aiml.Kernel()
 
@@ -9,71 +10,33 @@ kernel = aiml.Kernel()
 kernel.learn("std-startup.xml")
 # Respond to load aiml b
 kernel.respond("load aiml b")
-# Set the name of the bot
-kernel.setBotPredicate("nameBOT", "ALICE")
+# Set the name of the bot and the owner
+kernel.setBotPredicate("name", "ALICE")
+kernel.setBotPredicate("master", "R.a")
+
 
 # Initialize the context and users
 context = {}
 users = {}
 
-def process_input(input, uid):
-    # If the user is expected to input an order_id, handle it
-    if isinstance(context[uid], Context) and context[uid].awaiting_order_id:
-        function = getattr(order_services, 'track_order')
-        context[uid].awaiting_order_id = False
-        return function(input)
-
-    # If the input is a number and it's in the context, call the corresponding function
-    if input.isdigit() and isinstance(context[uid], Context) and input in context[uid].options:
-        function_name = context[uid].options[input]
-        function = getattr(order_services if function_name == 'track_order' else chat_services, function_name)
-        if function_name == 'track_order':
-            context[uid].awaiting_order_id = True
-            return "Silakan masukkan ID pesanan yang ingin Anda lacak."
-        else:
-            return function(uid)
-    return None
-
 def chatbot_response(input, uid):
-    global users, context
-    # Check if the user exists, if not create a new user and context
-    if uid not in users:
+    if uid not in users: #if the user is not in the users list, then create a new user
         users[uid] = User(uid)
+        #set the user's information from the database
+        # the structure of the user data is (id, name, email, phone, orders[])
+        user_data = user_controller.getUser(uid)
+        users[uid].name = user_data[1]
+        users[uid].email = user_data[2]
+        users[uid].phone = user_data[3]
+        users[uid].orders = user_data[4]
+        #set the user's name to the bot predicate
+        kernel.setPredicate("nama_user", users[uid].name)
+        kernel.setPredicate("email_user", users[uid].email)
+        kernel.setPredicate("phone_user", users[uid].phone)
+        # as soon will be add more...
+
+    if uid not in context: #if the user is not in the context list, then create a new context
         context[uid] = Context(uid)
 
-    # Check if the user has chosen to not use the bot anymore
-    if users[uid].usebot == '0':
-        return "Chatbot berhenti, kamu akan dialihkan untuk berbicara dengan customer service/admin kami."
-
-    # Process the input
-    processed_input = process_input(input, uid)
-
-    # Otherwise, process the input as usual
     response = kernel.respond(input)
-    if "|" in response:
-        options = response.split("|")
-        # map each option to a function
-        option_functions = {
-            "MAKANAN BELUM SAMPAI": {
-                "1": "track_order",
-                "2": "request_refund",
-                "3": "contact_customer_service"
-            },
-            "MAKANAN ADA YANG KURANG": {
-                "1": "handle_missing_food",
-                "2": "request_refund",
-                "3": "contact_customer_service"
-            },
-            "MAKANAN ADA YANG SALAH": {
-                "1": "handle_wrong_food",
-                "2": "request_refund",
-                "3": "contact_customer_service"
-            },
-            "EXIT": "handler_exit_chatbot"
-        }
-        context[uid].options = option_functions[input.upper()]
-        return options
-    elif response == "":
-        return "Maaf, saya tidak mengerti"
-    else:
-        return response
+    return response

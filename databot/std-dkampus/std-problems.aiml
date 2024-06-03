@@ -3,9 +3,7 @@
 <aiml version="1.0.1" encoding="UTF-8">
 <category>
     <pattern>MAKANAN BELUM SAMPAI</pattern>
-    <template>
-        Mohon maaf atas keterlambatannya.|Apakah Anda ingin:|1. Melacak pesanan?|2. Meminta pengembalian dana?|3. Menghubungi layanan pelanggan?
-    </template>
+    <template>Mohon maaf atas keterlambatannya.</template>
 </category>
 <category>
     <pattern>MAKANAN ADA YANG KURANG</pattern>

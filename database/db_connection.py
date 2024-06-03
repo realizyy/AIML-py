@@ -15,7 +15,7 @@ def create_connection():
             passwd=os.getenv("DB_PASS"),
             database=os.getenv("DB_NAME")
         )
-        print("Connection to MySQL DB successful")
+        # print("Connection to MySQL DB successful")
     except Error as e:
         print(f"The error '{e}' occurred")
 

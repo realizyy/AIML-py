@@ -27,10 +27,21 @@ def track_order(order_id):
         else:
             return f"Order dengan ID {order_id} sedang dalam proses"
 
-def handle_missing_food():
+def missing_food(order_id):
     # logic to handle missing food
-    #
-    return "Handling missing food..."
+    # this function will be called when the user send the topic "MAKANAN ADA YANG KURANG" to the chatbot
+    # the chatbot will ask the order id and the item that is missing this the return of response of bot to the user
+    # <template>Maaf, makanan ada yang kurang? Silahkan berikan order ID Anda.</template>
+    cursor = db.cursor()
+    trimmed_order_id = order_id[4:14].upper()
+    cursor.execute(f"SELECT * FROM histories WHERE order_id LIKE '%{trimmed_order_id}%'")
+    result = cursor.fetchone()
+    if result is None:
+        return "Order tidak ditemukan"
+    else:
+        #print(result)
+        #The structure of the result is (id(history), user_id, cour_id, umkm_id, item, harga, ongkir, jarak, status, bukti, bukti_akhir, alasan, order_id, created_at, updated_at)
+        return (f"Berikut merupakan item yang Anda pesan: \n{result[4]}.\nBisa tolong sebutkan item yang kurang?")
 
 def handle_wrong_food():
     # logic to handle wrong food

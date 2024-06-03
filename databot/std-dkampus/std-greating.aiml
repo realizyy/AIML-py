@@ -5,7 +5,7 @@
         <pattern>HALO</pattern>
         <template>
             <think>
-                <set name="greeting">Hai!</set>
+                <set name="greeting">Hai <get name="nama_user"/></set>
             </think>
             <srai>APA KABAR KAMU</srai>
         </template>
@@ -16,7 +16,7 @@
     </category>
     <category>
         <pattern>SIAPA NAMA KAMU</pattern>
-        <template>Nama saya <get name="nameBOT"/>ALICE.</template>
+        <template>Nama saya <bot name="name"/>. Saya adalah bot <bot name="name"/> dari DKAMPUS. Pencipta saya adalah <bot name="master"/>.</template>
     </category>
     <category>
         <pattern>JAM OPERASIONAL DKAMPUS</pattern>
@@ -32,7 +32,7 @@
     </category>
     <category>
         <pattern>BOT</pattern>
-        <template>Iya saya adalah bot ALICE dari DKAMPUS. Apa yang bisa saya bantu?|Atau kamu mau berbicara dengan admin kami?</template>
+        <template>Iya saya adalah bot <bot name="name"/> dari DKAMPUS. Apa yang bisa saya bantu?|Atau kamu mau berbicara dengan admin kami?</template>
     </category>
     <category>
         <pattern>EXIT</pattern>
