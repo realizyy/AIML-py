@@ -50,7 +50,7 @@ def missing_food(order_id):
         else:
             return "Error : " + str(e)
 
-def handle_wrong_food(order_id):
+def wrong_food(order_id):
     # logic to handle wrong food
     try:
         cursor = db.cursor()
@@ -71,4 +71,4 @@ def handle_wrong_food(order_id):
 
 def contact_customer_service():
     # logic to contact customer service
-    return "Contacting customer service..."
+    return "Silahkan hubungi customer service kami di nomor +62 851-6319-3031, WhatsApp : wa.me/6285163193031, Instagram : @dkampus_, atau email : dkampus.ind@gmail.com"

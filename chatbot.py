@@ -59,7 +59,14 @@ def chatbot_response(input, uid):
         # get the next input from the user
         next_input = input[16:].strip()
         # call the handle_wrong_food function with the next input
-        response = order_services.handle_wrong_food(next_input)
+        response = order_services.wrong_food(next_input)
+        #print(response)
+        return response
+    elif input.upper().startswith("REFUND ORDER"):
+        # get the next input from the user
+        next_input = input[13:].strip()
+        # call the refund function with the next input
+        response = payment_services.refund(next_input)
         #print(response)
         return response
     else:
