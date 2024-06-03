@@ -40,12 +40,17 @@ def chatbot_response(input, uid):
     if uid not in context: #if the user is not in the context list, then create a new context
         context[uid] = Context(uid)
 
+    # add the input to the user's context
+    context[uid].add_message("user", input)
+
     # check if the input is to check the order status (problems with the orders)
     if input.upper().startswith("CEK STATUS ORDER"):
         # get the next input from the user
         next_input = input[16:].strip()
         # call the check_order_status function with the next input
         response = order_services.track_order(next_input)
+        # add the bot's response to the user's context
+        context[uid].add_message("bot", response)
         #print(response)
         return response
     elif input.upper().startswith("ITEM YANG KURANG"):
@@ -53,6 +58,8 @@ def chatbot_response(input, uid):
         next_input = input[16:].strip()
         # call the missing_food function with the next input
         response = order_services.missing_food(next_input)
+        # add the bot's response to the user's context
+        context[uid].add_message("bot", response)
         #print(response)
         return response
     elif input.upper().startswith("PESANAN SALAH"):
@@ -60,6 +67,8 @@ def chatbot_response(input, uid):
         next_input = input[16:].strip()
         # call the handle_wrong_food function with the next input
         response = order_services.wrong_food(next_input)
+        # add the bot's response to the user's context
+        context[uid].add_message("bot", response)
         #print(response)
         return response
     elif input.upper().startswith("REFUND ORDER"):
@@ -67,12 +76,13 @@ def chatbot_response(input, uid):
         next_input = input[13:].strip()
         # call the refund function with the next input
         response = payment_services.refund(next_input)
+        # add the bot's response to the user's context
+        context[uid].add_message("bot", response)
         #print(response)
         return response
     else:
         # if the input is not to check the order status, then respond with the chatbot
         response = kernel.respond(input)
+        # add the bot's response to the user's context
+        context[uid].add_message("bot", response)
         return response
-
-    response = kernel.respond(input)
-    return response
