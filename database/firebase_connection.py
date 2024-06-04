@@ -1,26 +1,24 @@
 import os
-from firebase_admin import credentials, initialize_app
+import firebase_admin
+from firebase_admin import credentials, db
 from dotenv import load_dotenv
 from pathlib import Path
 
 # load env
 load_dotenv()
 
-
 def create_connection():
     try:
         # Load the credentials from the .env file from root directory
-        cred = credentials.Certificate(Path(os.getcwd()).parent / os.getenv("FIREBASE_CREDENTIALS"))
+        env_cred = Path(os.getcwd()) / os.getenv("FIREBASE_CREDENTIALS")
+        cred = credentials.Certificate(Path(os.getcwd()) / os.getenv("FIREBASE_CREDENTIALS"))
 
         # Initialize the app with the credentials and the database URL
-        firebase_app = initialize_app(cred, {
+        env_url = os.getenv("FIREBASE_DATABASE_URL")
+        firebase_admin.initialize_app(cred, {
             'databaseURL': os.getenv("FIREBASE_DATABASE_URL")
         })
-
-        #test the connection
-        print("Connection to Firebase successful")
-        return firebase_app
+        return db, env_url, env_cred
     except Exception as e:
-        print(f"Failed to connect to Firebase")
-        print(f"Error: {e}")
+        print(f'The error {e} occurred')
         return None
