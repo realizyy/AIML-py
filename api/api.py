@@ -4,7 +4,7 @@ from chatbot import chatbot_response
 from chatbot import context
 from database import db_connection
 from database import firebase_connection
-from models.user import User
+from models.user import User as ModelUser
 from models.context import Context
 import time
 
@@ -67,6 +67,8 @@ class testFBConnection(Resource):
                     data = ref.get()
                     total_data = len(data)
                     print('Total data:', total_data)
+                    for key, value in data.items():
+                        print(key, value)
                     return {'message': 'Firebase Database Connection OK!',
                             'url': env_url,
                             'credentials': str(env_cred),
@@ -76,13 +78,30 @@ class testFBConnection(Resource):
         except Exception as e:
             return {'message': 'Firebase Database Connection Failed with error: ' + str(e)}
 
+from flask import request
+
 class testModel(Resource):
-    def get(self):
-        return {'message': 'Todo to get model for specific user with uid/all users'}
+    def get(self, uid):
+        # Get the uid from the request (query number)/empty for all users
+        if 'uid' in request.args:
+            uid = request.args['uid']
+        else:
+            uid = ''
+        # Get the user data from the model
+        user_data = ModelUser.getUser(uid)
+        return {'message': 'Todo to get user data with uid/all users', 'data': str(user_data)}
+
 
 class testContext(Resource):
-    def get(self):
-        return {'message': 'Todo to get context for specific user with uid/all users'}
+    def get(self, uid):
+        # Get the uid from the request (query number)/empty for all users
+        if 'uid' in request.args:
+            uid = request.args['uid']
+        else:
+            uid = ''
+        # Get the context data from the model
+        context_data = Context.get_messages(uid)
+        return {'message': 'Todo to get context data with uid/all users', 'data': str(context_data)}
 
 
 # Routes for the API
@@ -90,5 +109,5 @@ api.add_resource(ChatBot, '/chat')
 api.add_resource(Ping, '/ping')
 api.add_resource(testDBConnection, '/testDB')
 api.add_resource(testFBConnection, '/testFB')
-api.add_resource(testModel, '/testModelUser')
-api.add_resource(testContext, '/testContextUser')
+api.add_resource(testModel, '/testModelUser/<string:uid>')
+api.add_resource(testContext, '/testContextUser/<string:uid>')

@@ -43,7 +43,7 @@ def missing_food(order_id):
         else:
             #print(result)
             #The structure of the result is (id(history), user_id, cour_id, umkm_id, item, harga, ongkir, jarak, status, bukti, bukti_akhir, alasan, order_id, created_at, updated_at)
-            return f"Berikut merupakan item yang Anda pesan: {result[4]}"
+            return f"Berikut merupakan item yang Anda pesan: {result[4]}. Silahkan ketikan makanan yang kurang"
     except Exception as e:
         if order_id == '':
             return "Silahkan inputkan order ID Anda, dengan format 'ITEM YANG KURANG (Order ID Kamu)'"
@@ -70,5 +70,4 @@ def wrong_food(order_id):
             return "Error : " + str(e)
 
 def contact_customer_service():
-    # logic to contact customer service
     return "Silahkan hubungi customer service kami di nomor +62 851-6319-3031, WhatsApp : wa.me/6285163193031, Instagram : @dkampus_, atau email : dkampus.ind@gmail.com"
