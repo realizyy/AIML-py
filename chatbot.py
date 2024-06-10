@@ -1,8 +1,17 @@
+import stanza
+import spacy_stanza
+import xml.etree.ElementTree as ET
 import aiml
+import os
 from services import order_services, payment_services, chat_services
 from models.user import User
 from models.context import Context
 from controller import user_controller
+
+# Load Stanza's Indonesian model
+stanza_nlp = stanza.Pipeline('id', download_method=None) # Load the model using stanza.Pipeline
+# Load Spacy's Indonesian model
+nlp = spacy_stanza.load_pipeline('id', download_method=None)  # Load the model using spacy_stanza.load_pipeline
 
 kernel = aiml.Kernel()
 
@@ -14,6 +23,21 @@ kernel.respond("load aiml b")
 kernel.setBotPredicate("name", "ALICE")
 kernel.setBotPredicate("master", "R.a")
 
+# Load AIML patterns dari semua file dalam direktori
+aiml_patterns = []
+try:
+    path = './databot/std-dkampus/'
+    for filename in os.listdir(path):
+        if filename.endswith('.aiml'):
+            tree = ET.parse(path + filename)
+            root = tree.getroot()
+            for pattern in root.iter('pattern'):
+                aiml_patterns.append(pattern.text)
+
+    print('Loaded AIML patterns there are:', len(aiml_patterns), 'patterns')
+except Exception as e:
+    print('Error while loading aiml patterns:', str(e))
+
 # Initialize the context and users
 context = {}
 users = {}
@@ -21,8 +45,37 @@ users = {}
 # Function to handle the chatbot response with further logic
 kernel.setPredicate("check_order_status", order_services.track_order)
 
+#function preprocess input if the input is not match with the aiml pattern
+def preprocess_input(input):
+    # Tokenisasi dengan Stanza
+    print('Doing pre-processing... for:', input)
+    doc = stanza_nlp(input)
+    tokens = [token.text.lower() for sentence in doc.sentences for token in sentence.words]  # Ambil semua token dan jadikan lowercase
+
+    # Pencarian Pola AIML yang Cocok
+    try:
+        for pattern in aiml_patterns:
+            # Tokenisasi pola AIML
+            pattern_tokens = [token.text.lower() for sentence in stanza_nlp(pattern).sentences for token in sentence.words]
+
+            # Cek apakah pola hanya terdiri dari satu kata
+            if len(pattern.strip().split()) == 1:
+                if pattern.strip().lower() == input.strip().lower():  # Perbandingan langsung (case-insensitive)
+                    response = kernel.respond(pattern)
+                    return response
+
+            # Cek apakah semua token pola ada dalam input
+            if all(token in tokens for token in pattern_tokens):
+                # Jika ada kecocokan, kembalikan respons dari AIML
+                response = kernel.respond(pattern)
+                return response
+        print('Stanza tokens:', tokens)
+    except Exception as e:
+        print('Error while pre-processing aiml:', str(e))
+
 def chatbot_response(input, uid):
-    if uid not in users: #if the user is not in the users list, then create a new user
+    # if the user is not in the users list, then create a new user
+    if uid not in users:
         users[uid] = User(uid)
         #set the user's information from the database
         # the structure of the user data is (id, name, email, phone, orders[])
@@ -37,52 +90,39 @@ def chatbot_response(input, uid):
         kernel.setPredicate("phone_user", users[uid].phone)
         # as soon will be add more...
 
-    if uid not in context: #if the user is not in the context list, then create a new context
+    # if the user is not in the context list, then create a new context
+    if uid not in context:
         context[uid] = Context(uid)
 
     # add the input to the user's context
-    context[uid].add_message("user", input)
+    #context[uid].add_message("user", input)
 
-    # check if the input is to check the order status (problems with the orders)
-    if input.upper().startswith("CEK STATUS ORDER"):
-        # get the next input from the user
-        next_input = input[16:].strip()
-        # call the check_order_status function with the next input
-        response = order_services.track_order(next_input)
-        # add the bot's response to the user's context
-        context[uid].add_message("bot", response)
-        #print(response)
-        return response
-    elif input.upper().startswith("ITEM YANG KURANG"):
-        # get the next input from the user
-        next_input = input[16:].strip()
-        # call the missing_food function with the next input
-        response = order_services.missing_food(next_input)
-        # add the bot's response to the user's context
-        context[uid].add_message("bot", response)
-        #print(response)
-        return response
-    elif input.upper().startswith("PESANAN SALAH"):
-        # get the next input from the user
-        next_input = input[16:].strip()
-        # call the handle_wrong_food function with the next input
-        response = order_services.wrong_food(next_input)
-        # add the bot's response to the user's context
-        context[uid].add_message("bot", response)
-        #print(response)
-        return response
-    elif input.upper().startswith("REFUND ORDER"):
-        # get the next input from the user
-        next_input = input[13:].strip()
-        # call the refund function with the next input
-        response = payment_services.refund(next_input)
-        # add the bot's response to the user's context
-        context[uid].add_message("bot", response)
-        #print(response)
-        return response
-    else:
-        # if the input is not to check the order status, then respond with the chatbot
-        response = kernel.respond(input)
-        # add the bot's response to the user's context
-        context[uid].add_message("bot", response)
-        return response
+    # Check the input, if it is a command, then execute the command. Otherwise, process the input with AIML patterns
+    try:
+        if input.upper().startswith('CEK STATUS ORDER'):
+            order_id = input[17:]
+            return order_services.track_order(order_id)
+        elif input.upper().startswith('ITEM YANG KURANG'):
+            order_id = input[17:]
+            return order_services.missing_item(order_id)
+        elif input.upper().startswith('PESANAN SALAH'):
+            order_id = input[14:]
+            return order_services.wrong_order(order_id)
+        elif input.upper().startswith('REFUND ORDER'):
+            order_id = input[13:]
+            return payment_services.refund(order_id)
+        else:
+            # Check the input with AIML patterns
+            response = kernel.respond(input)
+            if response == 'Maaf, saya tidak mengerti maksud Anda.' or response == 'Maaf, saya tidak mengerti maksud Anda. Silahkan ulangi pertanyaan Anda.' or response == 'Maaf, saya tidak mengerti maksud Anda. Silahkan ulangi pertanyaan Anda dengan kata-kata yang lebih jelas.':
+                print("[Pattern not found! Using pre-processing...]")
+                response = preprocess_input(input)
+                if response:
+                    return response
+                else:
+                    print("[No response found!]")
+            else:
+                return response
+    except Exception as e:
+        print("Error:", str(e))
+        return "Maaf, terjadi kesalahan dalam sistem. Silahkan coba beberapa saat lagi."

@@ -21,7 +21,7 @@ class ChatBot(Resource):
         #log the user input and bot response
         print(f"User[{uid}] Say: {user_input} \nBot Say: {bot_response}")
         # print the return all the messages in the context
-        print('Log context:\n', context[uid].get_messages())
+        #print('Log context:\n', context[uid].get_messages())
         return {'message': bot_response}
 
     def get(self):
