@@ -2,6 +2,7 @@ import stanza
 import spacy_stanza
 import xml.etree.ElementTree as ET
 import aiml
+import os
 
 kernel = aiml.Kernel()
 
@@ -20,20 +21,16 @@ stanza_nlp = stanza.Pipeline('id', download_method=None) # Load the model using 
 nlp = spacy_stanza.load_pipeline('id', download_method=None)  # Load the model using spacy_stanza.load_pipeline
 
 # Load AIML patterns dari semua file dalam direktori
-def load_aiml_patterns(directory_path):
-    aiml_patterns = []
-    for filename in os.listdir(directory_path):
-        if filename.endswith(".aiml"):
-            filepath = os.path.join(directory_path, filename)
-            try:
-                tree = ET.parse(filepath)
-                root = tree.getroot()
-                patterns = [category.find('pattern').text for category in root.findall('category')]
-                aiml_patterns.extend(patterns)
-                print(f'Success loading AIML patterns from {filename} with length:', len(patterns))
-            except Exception as e:
-                print(f'Error loading AIML patterns from {filename}: {str(e)}')
-    return aiml_patterns
+aiml_patterns = []
+def load_aiml_patterns():
+    path = './databot/std-dkampus/'
+    for filename in os.listdir(path):
+        if filename.endswith('.aiml'):
+            tree = ET.parse(path + filename)
+            root = tree.getroot()
+            for pattern in root.iter('pattern'):
+                aiml_patterns.append(pattern.text)
+        print('Loaded AIML patterns from:', filename)
 
 def preprocess_input(input, response=None):
     # 1. Tokenisasi dengan Stanza
@@ -79,6 +76,7 @@ def preprocess_input(input, response=None):
 # Main function untuk menginputkan pesan dan mendapatkan respons dari chatbot
 def main():
     uid = '25'
+    load_aiml_patterns()
     while True:
         input_message = input("You: ")
         try:
