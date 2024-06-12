@@ -99,30 +99,35 @@ def chatbot_response(input, uid):
 
     # Check the input, if it is a command, then execute the command. Otherwise, process the input with AIML patterns
     try:
-        if input.upper().startswith('CEK STATUS ORDER'):
-            order_id = input[17:]
-            return order_services.track_order(order_id)
-        elif input.upper().startswith('ITEM YANG KURANG'):
-            order_id = input[17:]
-            return order_services.missing_item(order_id)
-        elif input.upper().startswith('PESANAN SALAH'):
-            order_id = input[14:]
-            return order_services.wrong_order(order_id)
-        elif input.upper().startswith('REFUND ORDER'):
-            order_id = input[13:]
-            return payment_services.refund(order_id)
-        else:
-            # Check the input with AIML patterns
-            response = kernel.respond(input)
-            if response == 'Maaf, saya tidak mengerti maksud Anda.' or response == 'Maaf, saya tidak mengerti maksud Anda. Silahkan ulangi pertanyaan Anda.' or response == 'Maaf, saya tidak mengerti maksud Anda. Silahkan ulangi pertanyaan Anda dengan kata-kata yang lebih jelas.':
-                print("[Pattern not found! Using pre-processing...]")
-                response = preprocess_input(input)
-                if response:
-                    return response
-                else:
-                    print("[No response found!]")
+        # Kondisi jika user menggunakan chatbot dengan variable user.chatbot == 1 true, jika tidak maka 0
+        if users[uid].usebot == '1':
+            if input.upper().startswith('CEK STATUS ORDER'):
+                order_id = input[17:]
+                return order_services.track_order(order_id)
+            elif input.upper().startswith('ITEM YANG KURANG'):
+                order_id = input[17:]
+                return order_services.missing_item(order_id)
+            elif input.upper().startswith('PESANAN SALAH'):
+                order_id = input[14:]
+                return order_services.wrong_order(order_id)
+            elif input.upper().startswith('REFUND ORDER'):
+                order_id = input[13:]
+                return payment_services.refund(order_id)
+            elif input.upper().startswith('EXIT' or 'KELUAR' or 'BOT' or 'STOP' or 'ADMIN'):
+                users[uid].usebot = '0'
+                return "Kamu terhubung dengan admin, bot akan berhenti."
             else:
-                return response
+                # Check the input with AIML patterns
+                response = kernel.respond(input)
+                if response == 'Maaf, saya tidak mengerti maksud Anda.' or response == 'Maaf, saya tidak mengerti maksud Anda. Silahkan ulangi pertanyaan Anda.' or response == 'Maaf, saya tidak mengerti maksud Anda. Silahkan ulangi pertanyaan Anda dengan kata-kata yang lebih jelas.':
+                    print("[Pattern not found! Using pre-processing...]")
+                    response = preprocess_input(input)
+                    if response:
+                        return response
+                    else:
+                        print("[No response found!]")
+                else:
+                    return response
     except Exception as e:
         print("Error:", str(e))
         return "Maaf, terjadi kesalahan dalam sistem. Silahkan coba beberapa saat lagi."
