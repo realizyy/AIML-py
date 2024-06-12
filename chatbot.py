@@ -1,3 +1,4 @@
+from functools import lru_cache
 import stanza
 import spacy_stanza
 import xml.etree.ElementTree as ET
@@ -46,6 +47,7 @@ users = {}
 kernel.setPredicate("check_order_status", order_services.track_order)
 
 #function preprocess input if the input is not match with the aiml pattern
+@lru_cache(maxsize=None)
 def preprocess_input(input):
     # Tokenisasi dengan Stanza
     print('Doing pre-processing... for:', input)
