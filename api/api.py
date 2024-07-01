@@ -1,5 +1,6 @@
 from flask import Flask, request
 from flask_restful import Resource, Api
+from flask_cors import CORS
 from chatbot import chatbot_response
 from chatbot import context
 from database import db_connection
@@ -9,6 +10,7 @@ from models.context import Context
 import time
 
 app = Flask(__name__)
+CORS(app)
 api = Api(app)
 
 # Temporary data from users
@@ -16,13 +18,17 @@ api = Api(app)
 class ChatBot(Resource):
     def post(self):
         uid = request.get_json().get('uid', '')
+        user_data = ModelUser.getUser(uid)
         user_input = request.get_json().get('message', '')
         bot_response = chatbot_response(user_input, uid)
         #log the user input and bot response
         print(f"User[{uid}] Say: {user_input} \nBot Say: {bot_response}")
         # print the return all the messages in the context
         #print('Log context:\n', context[uid].get_messages())
-        return {'message': bot_response}
+        if user_data is not None:
+            return {'user': user_data.__dict__, 'message': bot_response}
+        else:
+            return {'user': {}, 'message': bot_response}
 
     def get(self):
         return {'message': 'Hello, World!'}
@@ -78,18 +84,14 @@ class testFBConnection(Resource):
         except Exception as e:
             return {'message': 'Firebase Database Connection Failed with error: ' + str(e)}
 
-from flask import request
-
 class testModel(Resource):
     def get(self, uid):
-        # Get the uid from the request (query number)/empty for all users
-        if 'uid' in request.args:
-            uid = request.args['uid']
-        else:
-            uid = ''
         # Get the user data from the model
         user_data = ModelUser.getUser(uid)
-        return {'message': 'Todo to get user data with uid/all users', 'data': str(user_data)}
+        if user_data is not None:
+            return {'message': 'User data retrieved successfully', 'data': user_data.__dict__}
+        else:
+            return {'message': 'User not found', 'data': {}}
 
 
 class testContext(Resource):

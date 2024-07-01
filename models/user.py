@@ -1,5 +1,6 @@
 # File: models/user.py
 import chatbot
+
 class User:
     def __init__(self, uid):
         self.uid = uid
@@ -11,23 +12,26 @@ class User:
         self.orders = []
 
     # fungsi untuk mereturn user berdasarkan uid
+    @staticmethod
     def getUser(uid):
-        try:
-            if uid == '':
-                users = chatbot.users
-                # return all of the users
-                return users
-            else:
+        # Check if the user exists in the dictionary
+        if uid in chatbot.users:
+            try:
+                # return specific user from uid
                 user = chatbot.users[uid]
                 if user is not None:
                     return user
-        except Exception as e:
-            print('Exception type:', type(e).__name__)
-            print('Exception message:', str(e))
+            except Exception as e:
+                print('Exception type:', type(e).__name__)
+                print('Exception message:', str(e))
+                return None
+        else:
+            print(f"No user with uid {uid}")
             return None
 
     # fungsi untuk mereturn semua user
-    def getUsers(self):
+    @staticmethod
+    def getUsers():
         try:
             users = chatbot.users
             if users is not None:
