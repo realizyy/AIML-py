@@ -3,6 +3,7 @@ import stanza
 import spacy_stanza
 import xml.etree.ElementTree as ET
 import aiml
+from fuzzywuzzy import fuzz
 import os
 import random
 from services import order_services, payment_services, chat_services
@@ -54,6 +55,7 @@ def preprocess_input(input):
     print('Doing pre-processing... for:', input)
     doc = stanza_nlp(input)
     tokens = [token.text.lower() for sentence in doc.sentences for token in sentence.words]  # Ambil semua token dan jadikan lowercase
+    print('Stanza tokens:', tokens)
 
     # Pencarian Pola AIML yang Cocok
     try:
@@ -62,17 +64,27 @@ def preprocess_input(input):
             pattern_tokens = [token.text.lower() for sentence in stanza_nlp(pattern).sentences for token in sentence.words]
 
             # Cek apakah pola hanya terdiri dari satu kata
-            if len(pattern.strip().split()) == 1:
-                if pattern.strip().lower() == input.strip().lower():  # Perbandingan langsung (case-insensitive)
-                    response = kernel.respond(pattern)
-                    return response
+            # if len(pattern.strip().split()) == 1:
+            #     print('Kondisi jika pola hanya terdiri dari satu kata, pattern:', pattern)
+            #     if pattern.strip().lower() == input.strip().lower():  # Perbandingan langsung (case-insensitive)
+            #         response = kernel.respond(pattern)
+            #         return response
 
             # Cek apakah semua token pola ada dalam input
-            if all(token in tokens for token in pattern_tokens):
-                # Jika ada kecocokan, kembalikan respons dari AIML
+
+            # if all(token in tokens for token in pattern_tokens):
+            #     # Jika ada kecocokan, kembalikan respons dari AIML
+            #     print('Kondisi jika semua token pola ada dalam input, pattern:', pattern)
+            #     response = kernel.respond(pattern)
+            #     return response
+
+            # Cek dengan fuzzy matching
+            if fuzz.ratio(' '.join(tokens), ' '.join(pattern_tokens)) >= 60:  # Ubah threshold sesuai kebutuhan
+                print('Kondisi jika ada kecocokan fuzzy, pattern:', pattern, ' Fuzzy ratio:', fuzz.ratio(' '.join(tokens), ' '.join(pattern_tokens)))
                 response = kernel.respond(pattern)
                 return response
-        print('Stanza tokens:', tokens)
+            else:
+                print('Fuzzy ratio:', fuzz.ratio(' '.join(tokens), ' '.join(pattern_tokens)))
     except Exception as e:
         print('Error while pre-processing aiml:', str(e))
 
