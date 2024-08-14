@@ -4,6 +4,7 @@ import spacy_stanza
 import xml.etree.ElementTree as ET
 import aiml
 import os
+import random
 from services import order_services, payment_services, chat_services
 from models.user import User
 from models.context import Context
@@ -128,6 +129,8 @@ def chatbot_response(input, uid):
                         return response
                     else:
                         print("[No response found!]")
+                        randomResponse = ['Maaf, saya tidak mengerti maksud Anda.', 'Maaf, saya tidak mengerti maksud Anda. Silahkan ulangi pertanyaan Anda.', 'Maaf, saya tidak mengerti maksud Anda. Silahkan ulangi pertanyaan Anda dengan kata-kata yang lebih jelas.']
+                        return randomResponse[random.randint(0, 2)]
                 else:
                     return response
     except Exception as e:

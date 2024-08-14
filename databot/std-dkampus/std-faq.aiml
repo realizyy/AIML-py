@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<aiml version="1.0.1" encoding="UTF-8">
+    <category>
+        <pattern>BAGAIMANA CARA MELAKUKAN PEMESANAN</pattern>
+        <template>Kamu bisa melakukan pencarian menu dibagan search, lalu pilih menu yang kamu inginkan.</template>
+    </category>
+    <category>
+        <pattern>BAGAIMANA CARA MELAKUKAN PEMESANAN JASTIP</pattern>
+        <template>Kamu dapat mengakses link berikut https://dkampus.my.id/jastip , atau kamu bisa click di banner home. Lalu kamu dapat mengisi form untuk melakukan pemesanan jastip kamu.</template>
+    </category>
+    <category>
+        <pattern>BAGAIMANA CARA MELAKUKAN PEMBAYARAN</pattern>
+        <template>Setelah melakukan pemesanan, kamu akan mendapatkan sebuah halaman page yang terdapat detail pembelian serta QR Code untuk melakukan pembayaran pesanan kamu.</template>
+    </category>
+    <category>
+        <pattern>BAGAIMANA CARA MELAKUKAN PEMBAYARAN JASTIP</pattern>
+        <template>Setelah melakukan pemesanan, kamu akan mendapatkan sebuah halaman page yang terdapat detail pembelian serta QR Code untuk melakukan pembayaran pesanan kamu.</template>
+    </category>
+    <category>
+        <pattern>BAGAIMANA CARA MELACAK PESANAN</pattern>
+        <template>Kamu dapat mengakses bagian pesanan, lalu dibagian atas page ada pesanan dan progess, klik proegess untuk melihat semua pesananan kamu.</template>
+    </category>
+    <category>
+        <pattern>BAGAIMANA CARA MELACAK PESANAN JASTIP</pattern>
+        <template>Kamu dapat mengakses bagian pesanan, lalu dibagian atas page ada pesanan dan progess, klik proegess untuk melihat semua pesananan kamu.</template>
+    </category>
+    <category>
+        <pattern>BAGAIMANA CARA MENDAFTARKAN UMKM</pattern>
+        <template>Kamu dapat mengakses link berikut https://dkampus.my.id/umkm , atau kamu bisa chat admin untuk mendaftarkan UMKM kamu di WhatsApp : wa.me/6285163193031.</template>
+    </category>
+    <category>
+        <pattern>BAGAIMANA CARA MENGHUBUNGI ADMIN</pattern>
+        <template>Kamu bisa klik icon whatsapp diatas chatroom ini, atau bisa di nomor berikut : wa.me/6285163193031.</template>
+    </category>
+    <category>
+        <pattern>JAM OPERASIONAL DKAMPUS</pattern>
+        <template>Jam operasional Dkampus adalah pukul 08:00 - 21:00.</template>
+    </category>
+    <category>
+        <pattern>KONTAK DKAMPUS</pattern>
+        <template>Kontak kampus nomor +62 851-6319-3031, WhatsApp : wa.me/6285163193031, Instagram : @dkampus_, atau email : dkampus.ind@gmail.com"</template>
+    </category>
+    <category>
+        <pattern>WEBSITE DKAMPUS</pattern>
+        <template>Website kampus bisa diakses di dkampus.my.id yaa!</template>
+    </category>
+</aiml>
