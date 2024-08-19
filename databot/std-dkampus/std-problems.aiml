@@ -34,11 +34,11 @@
         <template>Maaf untuk ketidaknyamanan yang Kamu alami.Silahkan berikan order ID Anda dengan format 'REFUND (Order ID Kamu)'.</template>
 </category>
 <category>
-    <pattern>WARUNG TUTUP</pattern>
+    <pattern>WARUNG YANG TUTUP</pattern>
         <template>Maaf, warung tutup. Silahkan pesan di jam operasional setiap warung.</template>
 </category>
 <category>
-    <pattern>UMKM TUTUP</pattern>
+    <pattern>UMKM YANG TUTUP</pattern>
         <template>Maaf, UMKM tutup. Silahkan pesan di jam operasional setiap UMKM.</template>
 </category>
 <category>

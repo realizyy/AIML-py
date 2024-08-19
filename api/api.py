@@ -2,7 +2,6 @@ from flask import Flask, request
 from flask_restful import Resource, Api
 from flask_cors import CORS
 from chatbot import chatbot_response
-from chatbot import context
 from database import db_connection
 from database import firebase_connection
 from models.user import User as ModelUser
@@ -23,7 +22,6 @@ class ChatBot(Resource):
         bot_response = chatbot_response(user_input, uid)
         #log the user input and bot response
         print(f"User[{uid}] Say: {user_input} \nBot Say: {bot_response}")
-        # print the return all the messages in the context
         #print('Log context:\n', context[uid].get_messages())
         if user_data is not None:
             return {'user': user_data.__dict__, 'message': bot_response}
